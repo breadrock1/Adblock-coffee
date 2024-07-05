@@ -49,19 +49,18 @@ jobs:
     needs: create-release
     permissions:
       contents: write
-
     strategy:
       matrix:
         rust-target: [
-          'x86_64-unknown-linux-gnu'
+          'x86_64-unknown-linux-gnu',
+          'aarch64-linux-android',
+          'armv7-linux-androideabi',
+          'i686-linux-android'
         ]
-
     outputs:
       java_platform: ${{ steps.jdk.outputs.java_platform }}
-
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.rust-target }}
@@ -74,6 +73,9 @@ jobs:
           
           elif [ ${{ matrix.rust-target }} == 'armv7-linux-androideabi' ]; then
             echo "java_platform=armv7" >> $GITHUB_OUTPUT
+          
+          elif [ ${{ matrix.rust-target }} == 'i686-linux-android' ]; then
+            echo "java_platform=x86" >> $GITHUB_OUTPUT
 
           else
             echo "java_platform=x64" >> $GITHUB_OUTPUT
@@ -81,6 +83,7 @@ jobs:
 
       - name: Build rust library for ${{ matrix.rust-target }}
         run: |
+          rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android
           cargo build --release --manifest-path adblock-rs/Cargo.toml
           mkdir -p ./target/lib
           cp -r ./adblock-rs/target/release/libadblock_coffee.* ./target/lib/
