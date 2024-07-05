@@ -26,6 +26,7 @@ jobs:
           architecture: x64
 
       - name: Get project version
+        id: version
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "project_version=$VERSION" >> $GITHUB_OUTPUT
