@@ -9,10 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          components: rustfmt
       - name: Rustfmt Check
-        uses: actions-rust-lang/rustfmt@v1
+        run: cargo fmt --check --manifest-path adblock-rs/Cargo.toml
 
   build:
     name: build project
