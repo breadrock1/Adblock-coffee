@@ -9,6 +9,8 @@ jobs:
   create-release:
     name: create release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     outputs:
       version_output: ${{ steps.version.outputs.project_version }}
