@@ -69,12 +69,14 @@ jobs:
       - name: Select jdk platform
         id: jdk
         run: |
-          if [ ${{ matrix.rust-target }} == 'pull_request' ]; then
-            echo "java_platform=x64" >> $GITHUB_OUTPUT
-          elif [ ${{ matrix.rust-target }} == 'push' ]; then
-            echo "java_platform=armv7" >> $GITHUB_OUTPUT
-          else
+          if [ ${{ matrix.rust-target }} == 'aarch64-linux-android' ]; then
             echo "java_platform=aarch64" >> $GITHUB_OUTPUT
+          
+          elif [ ${{ matrix.rust-target }} == 'armv7-linux-androideabi' ]; then
+            echo "java_platform=armv7" >> $GITHUB_OUTPUT
+
+          else
+            echo "java_platform=x64" >> $GITHUB_OUTPUT
           fi
 
       - name: Build rust library for ${{ matrix.rust-target }}
