@@ -8,7 +8,6 @@ This project is a simplest Java wrapper for the `adblock-rust` library, allowing
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Examples](#examples)
 
 ## Introduction
 
@@ -33,17 +32,23 @@ First, you need to build the `adblock-rust` library and generate the shared libr
 
 1. Clone the `adblock-rust` repository:
 2. Build the library: 
-```sh cargo build --release```
+```sh 
+cargo build --release --manifest-path adblock-rs/Cargo.toml
+mvn package
+```
 
 3. Locate the generated shared library file in the `target/release` directory.
 ```java
-public class Main {
-    static {
-        System.loadLibrary("adblock_rust"); // Replace with the actual library name
-    }
-    
+public class Main {    
     public static void main(String[] args) {
-        // Your code here
+        List<String> rules = new ArrayList<>(List.of(
+            "-advertisement-icon.",
+            "-advertisement-management/",
+            "-advertisement.",
+            "-advertisement/script."
+        ));
+        
+        AdvtBlocker blocker = AdvtBlocker.createInstance(rules);
     }
 }
 ```
@@ -69,54 +74,21 @@ import com.example.adblock.AdblockEngine;
 
 public class Main {
     public static void main(String[] args) {
-        AdblockEngine engine = new AdblockEngine();
+        List<String> rules = new ArrayList<>(List.of(
+            "-advertisement-icon.",
+            "-advertisement-management/",
+            "-advertisement.",
+            "-advertisement/script."
+        ));
         
-        // Load filter lists
-        engine.loadFilterList("path/to/easylist.txt");
+        AdvtBlocker blocker = AdvtBlocker.createInstance(rules);
+        boolean result = blocker.checkUrls(
+            "http://example.com/-advertisement-icon.",
+            "http://example.com/helloworld",
+            "image"
+        );
         
-        // Check if a URL is blocked
-        boolean isBlocked = engine.isBlocked("http://example.com/ad");
-        System.out.println("Is blocked: " + isBlocked);
-    }
-}
-
-```
-
-## Examples
-
-### Example 1: Blocking Ads
-
-```java
-import com.example.adblock.AdblockEngine;
-
-public class AdblockExample {
-    public static void main(String[] args) {
-        AdblockEngine engine = new AdblockEngine();
-        
-        // Load filter lists
-        engine.loadFilterList("path/to/easylist.txt");
-        
-        // Check if a URL is blocked
-        boolean isBlocked = engine.isBlocked("http://example.com/ad");
-        System.out.println("Is blocked: " + isBlocked);
-    }
-}
-```
-
-### Example 2: Custom Filter Rules
-```java
-import com.example.adblock.AdblockEngine;
-
-public class CustomFilterExample {
-    public static void main(String[] args) {
-        AdblockEngine engine = new AdblockEngine();
-        
-        // Add custom filter rule
-        engine.addCustomFilterRule("||example.com^");
-        
-        // Check if a URL is blocked
-        boolean isBlocked = engine.isBlocked("http://example.com/ad");
-        System.out.println("Is blocked: " + isBlocked);
+        System.out.println(result);
     }
 }
 ```
