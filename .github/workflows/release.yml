@@ -53,9 +53,9 @@ jobs:
       matrix:
         rust-target: [
           'x86_64-unknown-linux-gnu',
-          'aarch64-linux-android',
-          'armv7-linux-androideabi',
-          'i686-linux-android'
+#          'aarch64-linux-android',
+#          'armv7-linux-androideabi',
+#          'i686-linux-android'
         ]
     outputs:
       java_platform: ${{ steps.jdk.outputs.java_platform }}
