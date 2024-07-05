@@ -1,4 +1,4 @@
-name: "Build project"
+name: "Create release"
 on:
   push:
     branches:
@@ -47,6 +47,7 @@ jobs:
     needs: create-release
     permissions:
       contents: write
+
     strategy:
       matrix:
         rust-target: [
@@ -71,11 +72,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           architecture: x64
+
       - name: Build java library
         run: mvn package
 
       - name: Create archive
-        id: archive
         uses: vimtor/action-zip@5f1c4aa587ea41db1110df6a99981dbe19cee310
         with:
           files: ./target
