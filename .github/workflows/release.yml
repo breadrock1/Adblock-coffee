@@ -22,7 +22,7 @@ jobs:
           target: ${{ matrix.rust-toolchain }}
       - name: Build rust library for ${{ matrix.rust-toolchain }}
         run: |
-          cargo build --package adblock-coffee
+          cargo build --manifest-path adblock-rs/Cargo.toml
           cp -r adblock-rs/target/debug/libadblock_coffee.* .
       - uses: actions/setup-java@v4
         with:
