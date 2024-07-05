@@ -25,7 +25,7 @@ jobs:
           cargo build --manifest-path adblock-rs/Cargo.toml
           mkdir -p ./target
           cp -r ./adblock-rs/target/debug/libadblock_coffee.* ./target/
-          cp -r ./adblock-rs/target/debug/libadblock_coffee.* /usr/java/packages/lib/
+          export PATH=$PATH:$PWD
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
