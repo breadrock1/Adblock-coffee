@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - "master"
-  pull_request:
+      - "release/**"
 
 jobs:
   build:
@@ -23,7 +23,9 @@ jobs:
       - name: Build rust library for ${{ matrix.rust-toolchain }}
         run: |
           cargo build --manifest-path adblock-rs/Cargo.toml
+          ls -la adblock-rs/target/debug 
           cp -r adblock-rs/target/debug/libadblock_coffee.* .
+          ln -s libadblock_coffee.* /usr/lib/
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
