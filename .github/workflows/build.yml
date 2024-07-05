@@ -9,14 +9,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-        with:
-          components: rustfmt
       - name: Rustfmt Check
-        uses: actions-rust-lang/rustfmt@v1
+        run: cargo fmt --check --manifest-path adblock-rs/Cargo.toml
 
   build:
     name: build project
     runs-on: ubuntu-latest
+    needs: formatting
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -24,7 +23,7 @@ jobs:
         run: |
           cargo build --manifest-path adblock-rs/Cargo.toml
           mkdir -p ./target/lib
-          cp -r ./adblock-rs/target/release/libadblock_coffee.* ./target/lib/
+          cp -r ./adblock-rs/target/debug/libadblock_coffee.* ./target/lib/
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
@@ -36,15 +35,17 @@ jobs:
   cargo-test:
     name: cargo test
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - name: Build rust library
-        run: cargo test --all
+        run: cargo test --all --manifest-path adblock-rs/Cargo.toml
 
   mvn-test:
     name: mvn test
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -52,7 +53,7 @@ jobs:
         run: |
           cargo build --manifest-path adblock-rs/Cargo.toml
           mkdir -p ./target/lib
-          cp -r ./adblock-rs/target/release/libadblock_coffee.* ./target/lib/
+          cp -r ./adblock-rs/target/debug/libadblock_coffee.* ./target/lib/
       - uses: actions/setup-java@v4
         with:
           java-version: '11'

@@ -1,7 +1,7 @@
 use jni::errors::{Exception, ToException};
 
-use std::fmt::Debug;
 use adblock::request::RequestError;
+use std::fmt::Debug;
 use thiserror::Error;
 
 #[derive(Debug, Error)]

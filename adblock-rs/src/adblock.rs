@@ -1,6 +1,6 @@
-use adblock::{Engine, FilterSet};
 use adblock::lists::ParseOptions;
 use adblock::request::Request;
+use adblock::{Engine, FilterSet};
 
 use crate::errors::RustException;
 
@@ -55,11 +55,13 @@ mod adblock_test {
         ];
 
         let advt_blocker = AdvtBlocker::new(rules);
-        let check_result = advt_blocker.check_network_urls(
-            "http://example.com/-advertisement-icon.",
-            "http://example.com/helloworld",
-            "image"
-        ).unwrap();
+        let check_result = advt_blocker
+            .check_network_urls(
+                "http://example.com/-advertisement-icon.",
+                "http://example.com/helloworld",
+                "image",
+            )
+            .unwrap();
 
         assert_eq!(check_result, true);
     }
