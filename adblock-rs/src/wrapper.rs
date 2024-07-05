@@ -1,13 +1,13 @@
-use jni::JNIEnv;
 use jni::objects::{JObjectArray, JString};
 use jni::sys::{jboolean, jlong};
+use jni::JNIEnv;
 
 use crate::adblock::AdvtBlocker;
 use crate::errors::RustException;
 
 pub(crate) fn init_object_wrapped(
     env: &mut JNIEnv,
-    rules: &JObjectArray
+    rules: &JObjectArray,
 ) -> Result<AdvtBlocker, RustException> {
     let conv_rules = extract_list_str(env, rules)?;
     Ok(AdvtBlocker::new(conv_rules))
@@ -29,12 +29,11 @@ pub(crate) fn check_net_urls_wrapped(
 
         let req_type_str = extract_str(env, req_type)?;
 
-        let check_result = advt_blocker
-            .check_network_urls(
-                url_str.as_str(),
-                src_url_str.as_str(),
-                req_type_str.as_str(),
-            )?;
+        let check_result = advt_blocker.check_network_urls(
+            url_str.as_str(),
+            src_url_str.as_str(),
+            req_type_str.as_str(),
+        )?;
 
         Ok(check_result as jboolean)
     }
@@ -52,7 +51,10 @@ fn extract_str<'a>(env: &'a mut JNIEnv, j_obj: &'a JString) -> Result<String, Ru
     Ok(str_obj.to_string())
 }
 
-fn extract_list_str<'a>(env: &'a mut JNIEnv, j_obj_arr: &'a JObjectArray) -> Result<Vec<String>, RustException> {
+fn extract_list_str<'a>(
+    env: &'a mut JNIEnv,
+    j_obj_arr: &'a JObjectArray,
+) -> Result<Vec<String>, RustException> {
     let j_list = env
         .get_list(&j_obj_arr)
         .map_err(|err| RustException::ExtractParameter(err.to_string()))?;
