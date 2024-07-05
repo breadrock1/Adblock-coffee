@@ -7,7 +7,6 @@
   <groupId>com.example.adblock</groupId>
   <artifactId>adblock-coffee</artifactId>
   <version>1.0-SNAPSHOT</version>
-
   <name>adblock-coffee</name>
 
   <properties>
@@ -36,6 +35,41 @@
               <arg>target/headers</arg>
             </compilerArgs>
           </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.17</version>
+          <configuration>
+            <argLine>-Djava.library.path=${project.basedir}/target/lib/</argLine>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>3.2.0</version>
+          <executions>
+            <execution>
+              <id>copy-native-libs</id>
+              <phase>process-resources</phase>
+              <goals>
+                <goal>copy-resources</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${project.basedir}/target/lib</outputDirectory>
+                <resources>
+                  <resource>
+                    <directory>${project.basedir}/lib</directory>
+                    <includes>
+                      <include>**/*.dylib</include>
+                      <include>**/*.so</include>
+                      <include>**/*.dll</include>
+                    </includes>
+                  </resource>
+                </resources>
+              </configuration>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
   </build>
