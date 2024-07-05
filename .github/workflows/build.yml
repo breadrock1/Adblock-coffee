@@ -17,6 +17,7 @@ jobs:
   build:
     name: build project
     runs-on: ubuntu-latest
+    needs: formatting
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -36,6 +37,7 @@ jobs:
   cargo-test:
     name: cargo test
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -45,6 +47,7 @@ jobs:
   mvn-test:
     name: mvn test
     runs-on: ubuntu-latest
+    needs: build
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
