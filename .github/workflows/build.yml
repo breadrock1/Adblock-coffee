@@ -1,0 +1,60 @@
+name: "Build project"
+on:
+  pull_request:
+
+jobs:
+  formatting:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt
+      - name: Rustfmt Check
+        uses: actions-rust-lang/rustfmt@v1
+
+  build:
+    name: build project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build rust library
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        run: |
+          cargo build
+          cp -r adblock-rs/target/debug/libadblock_coffee.* .
+      - name: Build java library
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          architecture: x64
+        run: mvn package
+
+  cargo-test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build rust library
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        run: cargo test --all-features
+
+  mvn-test:
+    name: mvn test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build rust library
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        run: |
+          cargo build
+          cp -r adblock-rs/target/debug/libadblock_coffee.* .
+      - name: Run test by maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          architecture: x64
+        run: mvn test
