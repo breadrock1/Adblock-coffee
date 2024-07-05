@@ -56,14 +56,28 @@ jobs:
           'x86_64-unknown-linux-gnu'
         ]
 
+    outputs:
+      java_platform: ${{ steps.jdk.outputs.java_platform }}
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          target: ${{ matrix.rust-toolchain }}
+          target: ${{ matrix.rust-target }}
 
-      - name: Build rust library for ${{ matrix.rust-toolchain }}
+      - name: Select jdk platform
+        id: jdk
+        run: |
+          if [ ${{ matrix.rust-target }} == 'pull_request' ]; then
+            echo "java_platform=x64" >> $GITHUB_OUTPUT
+          elif [ ${{ matrix.rust-target }} == 'push' ]; then
+            echo "java_platform=armv7" >> $GITHUB_OUTPUT
+          else
+            echo "java_platform=aarch64" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build rust library for ${{ matrix.rust-target }}
         run: |
           cargo build --release --manifest-path adblock-rs/Cargo.toml
           mkdir -p ./target/lib
@@ -73,7 +87,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-          architecture: x64
+          architecture: ${{ steps.jdk.outputs.java_platform }}
 
       - name: Build java library
         run: mvn package
@@ -82,7 +96,7 @@ jobs:
         uses: vimtor/action-zip@5f1c4aa587ea41db1110df6a99981dbe19cee310
         with:
           files: ./target
-          dest: adblock-coffee-${{ matrix.rust-toolchain }}-${{ needs.create-release.outputs.version_output }}.zip
+          dest: adblock-coffee-${{ matrix.rust-target }}-${{ needs.create-release.outputs.version_output }}.zip
           recursive: true
 
       - name: Upload linux artifact
@@ -91,6 +105,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.upload_url_output }}
-          asset_name: adblock-coffee-${{ matrix.rust-toolchain }}-${{ needs.create-release.outputs.version_output }}.zip
-          asset_path: ./adblock-coffee-${{ matrix.rust-toolchain }}-${{ needs.create-release.outputs.version_output }}.zip
+          asset_name: adblock-coffee-${{ matrix.rust-target }}-${{ needs.create-release.outputs.version_output }}.zip
+          asset_path: ./adblock-coffee-${{ matrix.rust-target }}-${{ needs.create-release.outputs.version_output }}.zip
           asset_content_type: application/zip
