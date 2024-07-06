@@ -6,7 +6,7 @@
 
   <groupId>com.example.adblock</groupId>
   <artifactId>adblock-coffee</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4</version>
   <name>adblock-coffee</name>
 
   <properties>
@@ -59,7 +59,15 @@
                 <outputDirectory>${project.basedir}/target/lib</outputDirectory>
                 <resources>
                   <resource>
-                    <directory>${project.basedir}/lib</directory>
+                    <directory>${project.basedir}/adblock-rs/target/debug/</directory>
+                    <includes>
+                      <include>**/*.dylib</include>
+                      <include>**/*.so</include>
+                      <include>**/*.dll</include>
+                    </includes>
+                  </resource>
+                  <resource>
+                    <directory>${project.basedir}/adblock-rs/target/release/</directory>
                     <includes>
                       <include>**/*.dylib</include>
                       <include>**/*.so</include>
@@ -68,6 +76,40 @@
                   </resource>
                 </resources>
               </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>3.3.0</version>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>com.example.adblock.AdvtBlocker</mainClass>
+              </manifest>
+            </archive>
+            <descriptorRefs>
+              <descriptorRef>jar-with-dependencies</descriptorRef>
+            </descriptorRefs>
+            <appendAssemblyId>false</appendAssemblyId>
+            <includeBaseDirectory>false</includeBaseDirectory>
+            <files>
+              <file>
+                <source>${project.basedir}/target/lib/libadblock_coffee.dylib</source>
+                <source>${project.basedir}/target/lib/libadblock_coffee.so</source>
+                <source>${project.basedir}/target/lib/libadblock_coffee.dll</source>
+                <outputDirectory>${project.basedir}/target/</outputDirectory>
+              </file>
+            </files>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id>
+              <phase>package</phase>
+              <goals>
+                <goal>single</goal>
+              </goals>
             </execution>
           </executions>
         </plugin>

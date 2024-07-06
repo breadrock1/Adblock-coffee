@@ -32,9 +32,62 @@ First, you need to build the `adblock-rust` library and generate the shared libr
 
 1. Clone the `adblock-rust` repository:
 2. Build the library: 
-```sh 
+```shell 
 cargo build --release --manifest-path adblock-rs/Cargo.toml
-mvn package
+mvn install
+```
+
+If you want to build library to another platform add option `--target` with needed platform like `aarch64-linux-android`, `armv7-linux-androideabi`, `i686-linux-android`.
+After that check that path of built library exists into `pom.xml` `maven-resources-plugin` section. As default `rustup` using current platform and creates `target/{debug,release}` directories.
+After switching target platform by `rustup` these directories created as `targer/{target-platform}/{debug,release}` directories.
+
+Example building library for `aarch64-linux-android` target: 
+```shell
+cargo build --release --target aarch64-linux-android --manifest-path adblock-rs/Cargo.toml
+```
+
+And you have to update `pom.xml` file:
+```xml
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-resources-plugin</artifactId>
+  <version>3.2.0</version>
+  <executions>
+    <execution>
+      <id>copy-native-libs</id>
+      <phase>process-resources</phase>
+      <goals>
+        <goal>copy-resources</goal>
+      </goals>
+      <configuration>
+        <outputDirectory>${project.basedir}/target/lib</outputDirectory>
+        <resources>
+          <resource>
+            <directory>${project.basedir}/adblock-rs/target/aarch64-linux-android/debug/</directory>
+            <includes>
+              <include>**/*.dylib</include>
+              <include>**/*.so</include>
+              <include>**/*.dll</include>
+            </includes>
+          </resource>
+          <resource>
+            <directory>${project.basedir}/adblock-rs/target/aarch64-linux-android/release/</directory>
+            <includes>
+              <include>**/*.dylib</include>
+              <include>**/*.so</include>
+              <include>**/*.dll</include>
+            </includes>
+          </resource>
+        </resources>
+      </configuration>
+    </execution>
+  </executions>
+</plugin>
+```
+
+And build jar:
+```shell
+mvn install
 ```
 
 3. Locate the generated shared library file in the `target/release` directory.
