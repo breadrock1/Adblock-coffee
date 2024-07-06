@@ -22,8 +22,6 @@ jobs:
       - name: Build rust library
         run: |
           cargo build --manifest-path adblock-rs/Cargo.toml
-          mkdir -p ./target/lib
-          cp -r ./adblock-rs/target/debug/libadblock_coffee.* ./target/lib/
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
@@ -52,8 +50,6 @@ jobs:
       - name: Build rust library
         run: |
           cargo build --manifest-path adblock-rs/Cargo.toml
-          mkdir -p ./target/lib
-          cp -r ./adblock-rs/target/debug/libadblock_coffee.* ./target/lib/
       - uses: actions/setup-java@v4
         with:
           java-version: '11'
