@@ -63,7 +63,7 @@ And you have to update `pom.xml` file:
         <outputDirectory>${project.basedir}/target/lib</outputDirectory>
         <resources>
           <resource>
-            <directory>${project.basedir}/adblock-rs/target/debug/</directory>
+            <directory>${project.basedir}/adblock-rs/target/aarch64-linux-android/debug/</directory>
             <includes>
               <include>**/*.dylib</include>
               <include>**/*.so</include>
@@ -71,7 +71,7 @@ And you have to update `pom.xml` file:
             </includes>
           </resource>
           <resource>
-            <directory>${project.basedir}/adblock-rs/target/release/</directory>
+            <directory>${project.basedir}/adblock-rs/target/aarch64-linux-android/release/</directory>
             <includes>
               <include>**/*.dylib</include>
               <include>**/*.so</include>
