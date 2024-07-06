@@ -59,7 +59,15 @@
                 <outputDirectory>${project.basedir}/target/lib</outputDirectory>
                 <resources>
                   <resource>
-                    <directory>${project.basedir}/lib</directory>
+                    <directory>${project.basedir}/adblock-rs/target/debug/</directory>
+                    <includes>
+                      <include>**/*.dylib</include>
+                      <include>**/*.so</include>
+                      <include>**/*.dll</include>
+                    </includes>
+                  </resource>
+                  <resource>
+                    <directory>${project.basedir}/adblock-rs/target/release/</directory>
                     <includes>
                       <include>**/*.dylib</include>
                       <include>**/*.so</include>
