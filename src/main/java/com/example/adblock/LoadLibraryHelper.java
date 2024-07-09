@@ -60,18 +60,18 @@ class LoadLibraryHelper {
      * This method generate extension by current system platform.
      *
      * @return String A native library extension by system platform.
-     * @throws RustException throws if failed to detect system platform.
      */
-    private static String buildLibraryExtension() throws RustException{
+    private static String buildLibraryExtension() {
         String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("windows")) {
             return ".dll";
         } else if (osName.contains("mac os x")) {
             return  ".dylib";
-        } else if (osName.contains("linux")) {
+        } if (osName.contains("linux")) {
             return ".so";
         } else {
-            throw new RustException("Unsupported OS: " + osName);
+            System.err.println("Unsupported OS: " + osName);
+            return ".so";
         }
     }
 
