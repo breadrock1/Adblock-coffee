@@ -1,13 +1,12 @@
 package com.example.adblock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.example.adblock.exception.RustException;
 
 /**
  * This public wrapper class provides base functionality of adblock-rust library.
- * First of all you have to create class instance by {@link #createInstance(List<String> rules)
+ * First of all you have to create class instance by {@link #createInstance(List<String>)
  * AdvtBlocker} method passing {@link List} of combined rules. After that you may invoke
  * {@link #checkUrls(String url, String sourceUrl, String requestType) AdvtBlocker} method passing
  * URL, source URL and request type string parameters to validate URL address.
@@ -15,10 +14,10 @@ import com.example.adblock.exception.RustException;
 public class AdvtBlocker {
     /**
      * This static code block loading external library to common address space.
-     * It's allow invoke all defined external methods by ffi.
+     * It's allow to invoke all defined external methods by ffi.
      */
     static {
-        System.loadLibrary("adblock_coffee");
+        LoadLibraryHelper.loadNativeLibrary();
     }
 
     /**
@@ -28,8 +27,8 @@ public class AdvtBlocker {
 
     /**
      * There is hidden base constructor. This decision was made because initialization of
-     * AdvtBlocker struct of external library may throws exception. Also need passing initialized
-     * external object pointer which is not clean way to design library.
+     * AdvtBlocker struct of external library may throw exception. Also need passing initialized
+     * external object pointer which is not a clean way to design library.
      *
      * @param extObjPointer A pointer to external library object AdvtBlocker.
      */

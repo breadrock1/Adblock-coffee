@@ -9,10 +9,45 @@
   <name>adblock-coffee</name>
 
   <properties>
+    <name>${project.name}</name>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <native.os>${os.name}</native.os>
+    <native.arch>${os.arch}</native.arch>
+    <native.path.resolved>${project.basedir}/lib</native.path.resolved>
+    <native.library-path.resolved>${project.basedir}/lib</native.library-path.resolved>
   </properties>
+
+  <profiles>
+    <profile>
+      <id>jni-config</id>
+      <activation>
+        <property>
+          <name>os.name</name>
+          <value>Linux</value>
+        </property>
+      </activation>
+      <properties>
+        <native.os>${os.name}</native.os>
+        <native.path>${project.build.directory}/lib</native.path>
+        <native.library-path>${project.build.directory}/lib</native.library-path>
+      </properties>
+    </profile>
+    <profile>
+      <id>deploy-local-maven</id>
+      <distributionManagement>
+        <repository>
+          <id>maven.releases</id>
+          <url>${env.RELEASE_REPO}</url>
+        </repository>
+        <snapshotRepository>
+          <id>maven.snapshots</id>
+          <url>${env.SNAPSHOT_REPO}</url>
+        </snapshotRepository>
+      </distributionManagement>
+    </profile>
+  </profiles>
 
   <dependencies>
     <dependency>
@@ -42,7 +77,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>${main.class}</mainClass>
+              <mainClass>com.example.adblock.AdvtBlocker</mainClass>
               <addClasspath>true</addClasspath>
               <classpathPrefix>lib/</classpathPrefix>
             </manifest>
@@ -110,6 +145,22 @@
         <configuration>
           <argLine>-Djava.library.path=${project.basedir}/target/lib/</argLine>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>properties-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>write-project-properties</goal>
+            </goals>
+            <configuration>
+              <outputFile>${project.build.outputDirectory}/my.properties</outputFile>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
