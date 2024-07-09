@@ -26,7 +26,7 @@
     <dependency>
       <groupId>com.example.adblock</groupId>
       <artifactId>adblock-coffee</artifactId>
-      <version>1.0.4</version>
+      <version>1.0.5</version>
     </dependency>
   </dependencies>
 
@@ -52,7 +52,7 @@
                 <artifactItem>
                   <groupId>com.example.adblock</groupId>
                   <artifactId>adblock-coffee</artifactId>
-                  <version>1.0.4</version>
+                  <version>1.0.5</version>
                   <type>jar</type>
                   <overWrite>false</overWrite>
                   <outputDirectory>${project.build.directory}/lib</outputDirectory>
