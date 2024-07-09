@@ -19,8 +19,8 @@ public class RustException extends RuntimeException {
      *
      * @param msg The exception message.
      */
-    public RustException(String message) {
-        super(message);
+    public RustException(String msg) {
+        super(msg);
     }
 
     /**
