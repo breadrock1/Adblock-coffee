@@ -55,7 +55,7 @@
                   <version>1.0.5</version>
                   <type>jar</type>
                   <overWrite>false</overWrite>
-                  <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                  <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>
@@ -75,7 +75,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.17</version>
         <configuration>
-          <argLine>-Djava.library.path=${project.build.directory}/lib</argLine>
+          <argLine>-Djava.library.path=${project.build.outputDirectory}/lib/lib</argLine>
         </configuration>
       </plugin>
       <plugin>

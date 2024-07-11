@@ -1,7 +1,8 @@
-use jni::errors::{Exception, ToException};
+use jni::errors::{Error, Exception, ToException};
 
 use adblock::request::RequestError;
 use std::fmt::Debug;
+use std::sync::PoisonError;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -10,6 +11,10 @@ pub enum RustException {
     CreateRequest(String),
     #[error("Failed while extracting parameter: {0}")]
     ExtractParameter(String),
+    #[error("Failed while lock mutex for AdvtBlocker: {0}")]
+    MutexGuardLock(String),
+    #[error("Jvm runtime error: {0}")]
+    JvmException(String),
 }
 
 impl ToException for RustException {
@@ -24,5 +29,17 @@ impl ToException for RustException {
 impl From<RequestError> for RustException {
     fn from(value: RequestError) -> Self {
         RustException::CreateRequest(value.to_string())
+    }
+}
+
+impl<T> From<PoisonError<T>> for RustException {
+    fn from(value: PoisonError<T>) -> Self {
+        RustException::MutexGuardLock(value.to_string())
+    }
+}
+
+impl From<jni::errors::Error> for RustException {
+    fn from(value: Error) -> Self {
+        RustException::JvmException(value.to_string())
     }
 }
