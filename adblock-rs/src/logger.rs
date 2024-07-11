@@ -16,7 +16,8 @@ lazy_static! {
             android_logger::init_once(
                 Config::default()
                     .with_tag("Tag_RustAdvtBlocker")
-                    .with_max_level(LevelFilter::max()));
+                    .with_max_level(LevelFilter::max()),
+            );
         });
 
         #[cfg(not(target_os = "android"))]

@@ -20,9 +20,7 @@ pub(crate) fn init_object_wrapped(
     rules: &JObjectArray,
 ) -> Result<jlong, RustException> {
     let conv_rules = extract_list_str(env, rules)?;
-    let mut instance_lock = INSTANCE
-        .lock()
-        .map_err(RustException::from)?;
+    let mut instance_lock = INSTANCE.lock().map_err(RustException::from)?;
 
     instance_lock.recreate(conv_rules);
 
@@ -34,9 +32,7 @@ pub(crate) fn destroy_object_wrapped(
     _env: &mut JNIEnv,
     _ptr: jlong,
 ) -> Result<jboolean, RustException> {
-    let instance_lock = INSTANCE
-        .lock()
-        .map_err(RustException::from)?;
+    let instance_lock = INSTANCE.lock().map_err(RustException::from)?;
 
     drop(instance_lock);
     Ok(true as jboolean)
@@ -49,9 +45,7 @@ pub(crate) fn check_net_urls_wrapped(
     src_url: &JString,
     req_type: &JString,
 ) -> Result<jboolean, RustException> {
-    let advt_blocker = INSTANCE
-        .lock()
-        .map_err(RustException::from)?;
+    let advt_blocker = INSTANCE.lock().map_err(RustException::from)?;
 
     let url_str = extract_str(env, url)?;
     let src_url_str = extract_str(env, src_url)?;
@@ -67,9 +61,7 @@ pub(crate) fn check_net_urls_wrapped(
 }
 
 fn extract_str<'a>(env: &'a mut JNIEnv, j_obj: &'a JString) -> Result<String, RustException> {
-    let j_str = env
-        .get_string(&j_obj)
-        .map_err(RustException::from)?;
+    let j_str = env.get_string(&j_obj).map_err(RustException::from)?;
 
     let str_obj = j_str
         .to_str()
@@ -82,13 +74,9 @@ fn extract_list_str<'a>(
     env: &'a mut JNIEnv,
     j_obj_arr: &'a JObjectArray,
 ) -> Result<Vec<String>, RustException> {
-    let j_list = env
-        .get_list(&j_obj_arr)
-        .map_err(RustException::from)?;
+    let j_list = env.get_list(&j_obj_arr).map_err(RustException::from)?;
 
-    let j_list_size = j_list
-        .size(env)
-        .map_err(RustException::from)?;
+    let j_list_size = j_list.size(env).map_err(RustException::from)?;
 
     let mut list_data = Vec::with_capacity(j_list_size as usize);
     for index in 0..j_list_size {

@@ -32,7 +32,7 @@ impl From<RequestError> for RustException {
     }
 }
 
-impl <T> From<PoisonError<T>> for RustException {
+impl<T> From<PoisonError<T>> for RustException {
     fn from(value: PoisonError<T>) -> Self {
         RustException::MutexGuardLock(value.to_string())
     }

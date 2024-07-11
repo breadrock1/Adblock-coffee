@@ -89,11 +89,7 @@ mod adblock_test {
 
         let advt_blocker = AdvtBlocker::new(rules);
         let check_result = advt_blocker
-            .check_network_urls(
-                "hvertisement-icon.",
-                "http://exampworld",
-                "kek",
-            )
+            .check_network_urls("hvertisement-icon.", "http://exampworld", "kek")
             .unwrap_or_else(|err| {
                 log::error!("{:?}", err.to_string());
                 false
