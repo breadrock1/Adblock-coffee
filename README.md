@@ -37,13 +37,24 @@ cargo build --release --manifest-path adblock-rs/Cargo.toml
 mvn install
 ```
 
-If you want to build library to another platform add option `--target` with needed platform like `aarch64-linux-android`, `armv7-linux-androideabi`, `i686-linux-android`.
+To build it for android platforms just use ndk (see installation on official site):
+```shell
+ cargo ndk -t aarch64-linux-android -o ./target build --release
+ mv arm64-v8 release 
+```
+
+Go back to project root and enter:
+```shell
+mvn install
+```
+
+If you want to build library to another platform add option `--target` with needed platform like `aarch64-unknown-linux-gnu`, .
 After that check that path of built library exists into `pom.xml` `maven-resources-plugin` section. As default `rustup` using current platform and creates `target/{debug,release}` directories.
 After switching target platform by `rustup` these directories created as `targer/{target-platform}/{debug,release}` directories.
 
-Example building library for `aarch64-linux-android` target: 
+Example building library for `aarch64-unknown-linux-gnu` target: 
 ```shell
-cargo build --release --target aarch64-linux-android --manifest-path adblock-rs/Cargo.toml
+cargo build --release --target aarch64-unknown-linux-gnu --manifest-path adblock-rs/Cargo.toml
 ```
 
 And you have to update `pom.xml` file:
