@@ -2,7 +2,7 @@ use lazy_static::lazy_static;
 use std::sync::Once;
 
 #[cfg(target_os = "android")]
-use {android_logger::Config, log::Level};
+use {android_logger::Config, log::LevelFilter};
 
 #[cfg(not(target_os = "android"))]
 use {env_logger::Builder, log::LevelFilter};
