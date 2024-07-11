@@ -1,9 +1,14 @@
 package com.example.adblock;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 import org.junit.Test;
 
 public class AdvtBlockerTest {
@@ -15,21 +20,88 @@ public class AdvtBlockerTest {
         "-advertisement/script."
     ));
 
+    private AdvtBlocker advtBlocker = AdvtBlocker.createInstance(rules);
+
     @Test
     public void createInstanceTest() {
-         AdvtBlocker blocker = AdvtBlocker.createInstance(rules);
-         assertTrue(blocker != null);
+        AdvtBlocker blocker = AdvtBlocker.createInstance(rules);
+        assertTrue(blocker != null);
     }
 
     @Test
-    public void checkTest() {
-         AdvtBlocker blocker = AdvtBlocker.createInstance(rules);
-         boolean result = blocker.checkUrls(
-             "http://example.com/-advertisement-icon.",
-             "http://example.com/helloworld",
-             "image"
-         );
+    public void destroyInstanceTest() {
+        AdvtBlocker blocker = AdvtBlocker.createInstance(rules);
+        assertTrue(blocker != null);
 
-         assertTrue(result);
+        blocker.destroyInstance();
+        assertTrue(true);
+    }
+
+    @Test
+    public void checkBaseCaseTest() {
+        boolean result = advtBlocker.checkUrls(
+            "http://example.com/-advertisement-icon.",
+            "http://example.com/helloworld",
+            "image"
+        );
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void checkBaseCaseMultipleTimesTest() {
+        boolean result1 = advtBlocker.checkUrls(
+            "http://example.com/-advertisement-icon.",
+            "http://example.com/helloworld",
+            "image"
+        );
+        assertTrue(result1);
+
+        boolean result2 = advtBlocker.checkUrls(
+            "http://example.com/-some-icon.",
+            "http://example.com/helloworld",
+            "image"
+        );
+        assertFalse(result2);
+
+        boolean result3 = advtBlocker.checkUrls(
+            "http://example.com/-advertisement-icon.",
+            "http://example.com/helloworld",
+            "script"
+        );
+        assertTrue(result3);
+
+        boolean result4 = advtBlocker.checkUrls(
+            "http://example.com/-advertisement-icon.",
+            "http://example.com/helloworld",
+            "image"
+        );
+        assertTrue(result4);
+    }
+
+    @Test
+    public void checkFromEaseRulesFiles() {
+        try {
+            ClassLoader classLoader = LoadLibraryHelper.class.getClassLoader();
+            URL easyResource = classLoader.getResource("easylist.txt");
+            URL easyPrivResource = classLoader.getResource("easyprivacy.txt");
+
+            List<String> easyRules = Files.readAllLines(Paths.get(easyResource.toString()));
+            List<String> easyPrivRules = Files.readAllLines(Paths.get(easyPrivResource.toString()));
+            easyRules.addAll(easyPrivRules);
+
+            AdvtBlocker blocker = AdvtBlocker.createInstance(easyRules);
+            for (int i = 0; i < 3000; i++) {
+                System.out.println(i);
+                boolean result = advtBlocker.checkUrls(
+                    "http://example.com/-advertisement-icon.",
+                    "http://example.com/helloworld",
+                    "her"
+                );
+                assertTrue(result);
+            }
+        } catch (IOException ex) {
+            System.err.println(ex.getMessage());
+        }
     }
 }

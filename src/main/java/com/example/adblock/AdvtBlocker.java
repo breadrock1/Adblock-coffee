@@ -46,7 +46,20 @@ public class AdvtBlocker {
      */
     public static AdvtBlocker createInstance(List<String> rules) throws RustException {
         long ptr = initObject(rules);
+        if (ptr < 0) {
+            throw new RustException("failed to initialize AdvtBlocker into rust");
+        }
+
         return new AdvtBlocker(ptr);
+    }
+
+    /**
+     * This method drops initialized native library object from memory.
+     */
+    public void destroyInstance() {
+        if (!destroyObject(this.advtBlockerPtr)) {
+            throw new RustException("Failed to destroy AdvtBlocker native library object!");
+        }
     }
 
     /**
@@ -71,6 +84,13 @@ public class AdvtBlocker {
      * @throws RustException runtime exception from external library.
      */
     public static native long initObject(List<String> rules);
+
+    /**
+     * There is static native method which drops initialized native library object.
+     *
+     * @param ptr A pointer to external library AdvtBlocker structure to drop.
+     */
+    public static native boolean destroyObject(long ptr);
 
     /**
      * There is native method which defined to get access to external library. Current method

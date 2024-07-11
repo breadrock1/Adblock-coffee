@@ -27,10 +27,25 @@ class LoadLibraryHelper {
      */
     public static void loadNativeLibrary() throws RustException {
         try {
+            if (LoadLibraryHelper.loadLibraryFromJavaLibPath()) {
+                System.out.println("Loaded native library from java.lib.path!");
+                return;
+            }
+
             String libraryPath = LoadLibraryHelper.buildLibraryPath();
             System.load(libraryPath);
         } catch (UnsatisfiedLinkError ex) {
             throw new RustException(ex.getMessage());
+        }
+    }
+
+    private static boolean loadLibraryFromJavaLibPath() {
+        try {
+            System.loadLibrary("adblock_coffee");
+            return true;
+        } catch (UnsatisfiedLinkError ex) {
+            System.err.println("Failed to load library from java.lib.path: " + ex.getMessage());
+            return false;
         }
     }
 
