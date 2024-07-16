@@ -1,4 +1,6 @@
 # Adblock-coffee
+[![Create release](https://github.com/breadrock1/Adblock-coffee/actions/workflows/release.yml/badge.svg)](https://github.com/breadrock1/Adblock-coffee/actions/workflows/release.yml)
+[![Last release: ](https://img.shields.io/github/v/release/breadrock1/Adblock-coffee)](https://img.shields.io/github/v/release/breadrock1/Adblock-coffee)
 
 This project is a simplest Java wrapper for the `adblock-rust` library, allowing you to use the powerful ad-blocking capabilities of `adblock-rust` in your Java applications.
 
